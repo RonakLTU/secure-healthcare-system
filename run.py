@@ -1,6 +1,7 @@
 from flask import Flask, render_template
 from app.models.user_model import create_user_table
 from app.routes.auth_routes import register_user, login_user
+from app.routes.patient_routes import add_patient, view_patients
 
 app = Flask(__name__,
             template_folder='app/templates',
@@ -22,6 +23,17 @@ def login():
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     return register_user()
+
+
+# Patient routes
+@app.route('/add_patient', methods=['GET', 'POST'])
+def add_patient_page():
+    return add_patient()
+
+
+@app.route('/patients')
+def patients_page():
+    return view_patients()
 
 
 if __name__ == '__main__':

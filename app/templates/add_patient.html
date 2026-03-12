@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h2>Add Patient Record</h2>
+
+<form method="POST">
+
+<label>Patient ID</label>
+<input type="text" name="patient_id" required>
+
+<label>Age</label>
+<input type="number" name="age">
+
+<label>Sex</label>
+<select name="sex">
+<option>Male</option>
+<option>Female</option>
+</select>
+
+<label>Blood Pressure</label>
+<input type="number" name="blood_pressure">
+
+<label>Cholesterol</label>
+<input type="number" name="cholesterol">
+
+<label>Fasting Blood Sugar</label>
+<select name="fasting_blood_sugar">
+<option>Yes</option>
+<option>No</option>
+</select>
+
+<label>Resting ECG</label>
+<select name="resting_ecg">
+<option>Normal</option>
+<option>Abnormal</option>
+</select>
+
+<label>Exercise Angina</label>
+<select name="exercise_angina">
+<option>Yes</option>
+<option>No</option>
+</select>
+
+<button type="submit">Save Patient</button>
+
+</form>
+
+{% endblock %}
