@@ -4,8 +4,6 @@
 
 <h2>Patient Records</h2>
 
-<a href="/add_patient">Add Patient</a>
-
 <table border="1">
 
 <tr>
@@ -14,6 +12,9 @@
 <th>Sex</th>
 <th>BP</th>
 <th>Cholesterol</th>
+<th>FBS</th>
+<th>ECG</th>
+<th>Angina</th>
 </tr>
 
 {% for patient in patients %}
@@ -24,6 +25,9 @@
 <td>{{ patient.sex }}</td>
 <td>{{ patient.blood_pressure }}</td>
 <td>{{ patient.cholesterol }}</td>
+<td>{{ patient.fasting_blood_sugar }}</td>
+<td>{{ patient.resting_ecg }}</td>
+<td>{{ patient.exercise_angina }}</td>
 </tr>
 
 {% endfor %}

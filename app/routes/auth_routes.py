@@ -13,28 +13,16 @@ def register_user():
         name = request.form.get("name")
         email = request.form.get("email")
         password = request.form.get("password")
-        role = request.form.get("role")
 
-        # Email validation
+        role = "patient"
+
         email_pattern = r'^[\w\.-]+@[\w\.-]+\.\w+$'
+
         if not re.match(email_pattern, email):
             return render_template("register.html", error="Invalid email format")
 
-        # Password validation
         if len(password) < 8:
-            return render_template("register.html", error="Password must be at least 8 characters")
-
-        if not re.search(r'[A-Z]', password):
-            return render_template("register.html", error="Password must contain uppercase letter")
-
-        if not re.search(r'[a-z]', password):
-            return render_template("register.html", error="Password must contain lowercase letter")
-
-        if not re.search(r'[0-9]', password):
-            return render_template("register.html", error="Password must contain number")
-
-        if not re.search(r'[!@#$%^&*(),.?\":{}|<>]', password):
-            return render_template("register.html", error="Password must contain special character")
+            return render_template("register.html", error="Password must be 8+ characters")
 
         hashed_password = hash_password(password)
 
@@ -79,10 +67,7 @@ def login_user():
 
         if user:
 
-            user_id = user[0]
-            name = user[1]
-            hashed_password = user[2]
-            role = user[3]
+            user_id, name, hashed_password, role = user
 
             if check_password(password, hashed_password):
 
@@ -95,3 +80,10 @@ def login_user():
         return render_template("login.html", error="Invalid email or password")
 
     return render_template("login.html")
+
+
+def logout_user():
+
+    session.clear()
+
+    return redirect("/login")

@@ -1,15 +1,23 @@
-from flask import request, render_template, redirect
+from flask import request, render_template, redirect, session
 from app.models.patient_model import create_patient_record, get_all_patients
 
 
 def add_patient():
 
+    if "role" not in session or session["role"] != "clinician":
+        return "Access denied"
+
     if request.method == "POST":
+
+        age = int(request.form.get("age"))
+
+        if age < 1 or age > 120:
+            return render_template("add_patient.html", error="Invalid age")
 
         patient_data = {
 
             "patient_id": request.form.get("patient_id"),
-            "age": request.form.get("age"),
+            "age": age,
             "sex": request.form.get("sex"),
             "blood_pressure": request.form.get("blood_pressure"),
             "cholesterol": request.form.get("cholesterol"),
@@ -27,6 +35,9 @@ def add_patient():
 
 
 def view_patients():
+
+    if "user_id" not in session:
+        return redirect("/login")
 
     patients = get_all_patients()
 
