@@ -2,6 +2,9 @@ from flask import request, render_template, redirect, session
 import sqlite3
 import re
 from app.security.password_utils import hash_password, check_password
+from flask_login import login_user as flask_login_user
+from app.models.auth_user import User
+from flask_login import logout_user as flask_logout
 
 DATABASE = "database/auth.db"
 
@@ -71,9 +74,9 @@ def login_user():
 
             if check_password(password, hashed_password):
 
-                session["user_id"] = user_id
-                session["name"] = name
-                session["role"] = role
+                user_obj = User(user_id, name, role)
+
+                flask_login_user(user_obj)
 
                 return redirect("/")
 
@@ -84,6 +87,6 @@ def login_user():
 
 def logout_user():
 
-    session.clear()
+    flask_logout()
 
     return redirect("/login")
