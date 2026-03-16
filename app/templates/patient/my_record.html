@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="record-container">
+
+<h2>My Medical Record</h2>
+
+{% if record %}
+
+<table class="record-table">
+
+<tr>
+<th>Age</th>
+<td>{{ record.age }}</td>
+</tr>
+
+<tr>
+<th>Sex</th>
+<td>{{ record.sex }}</td>
+</tr>
+
+<tr>
+<th>Blood Pressure</th>
+<td>{{ record.blood_pressure }}</td>
+</tr>
+
+<tr>
+<th>Cholesterol</th>
+<td>{{ record.cholesterol }}</td>
+</tr>
+
+<tr>
+<th>Fasting Blood Sugar</th>
+<td>{{ record.fasting_blood_sugar }}</td>
+</tr>
+
+<tr>
+<th>Resting ECG</th>
+<td>{{ record.resting_ecg }}</td>
+</tr>
+
+<tr>
+<th>Exercise Angina</th>
+<td>{{ record.exercise_angina }}</td>
+</tr>
+
+</table>
+
+{% else %}
+
+<p>No medical record found.</p>
+
+{% endif %}
+
+</div>
+
+{% endblock %}

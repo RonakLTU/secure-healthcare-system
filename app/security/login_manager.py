@@ -1,12 +1,10 @@
-from flask_login import LoginManager
 import sqlite3
+from flask_login import LoginManager
 from app.models.auth_user import User
 
 DATABASE = "database/auth.db"
 
 login_manager = LoginManager()
-
-login_manager.login_view = "login"
 
 
 @login_manager.user_loader
@@ -17,7 +15,11 @@ def load_user(user_id):
         cursor = conn.cursor()
 
         cursor.execute(
-            "SELECT id,name,role FROM users WHERE id=?",
+            """
+            SELECT id, name, email, role
+            FROM users
+            WHERE id=?
+            """,
             (user_id,)
         )
 
@@ -25,6 +27,7 @@ def load_user(user_id):
 
     if user:
 
-        return User(user[0], user[1], user[2])
+        # user = (id, name, email, role)
+        return User(user[0], user[1], user[2], user[3])
 
     return None

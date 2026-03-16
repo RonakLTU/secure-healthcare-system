@@ -4,9 +4,12 @@
 
 <h2>Patient Records</h2>
 
-<table border="1">
+<table id="patientTable">
+
+<thead>
 
 <tr>
+
 <th>ID</th>
 <th>Age</th>
 <th>Sex</th>
@@ -15,11 +18,17 @@
 <th>FBS</th>
 <th>ECG</th>
 <th>Angina</th>
+
 </tr>
+
+</thead>
+
+<tbody>
 
 {% for patient in patients %}
 
 <tr>
+
 <td>{{ patient.patient_id }}</td>
 <td>{{ patient.age }}</td>
 <td>{{ patient.sex }}</td>
@@ -28,9 +37,12 @@
 <td>{{ patient.fasting_blood_sugar }}</td>
 <td>{{ patient.resting_ecg }}</td>
 <td>{{ patient.exercise_angina }}</td>
+
 </tr>
 
 {% endfor %}
+
+</tbody>
 
 </table>
 

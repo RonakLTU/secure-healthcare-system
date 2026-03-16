@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<section class="clinician-dashboard">
+
+<div class="clinician-left">
+
+<h1>Clinician Dashboard</h1>
+
+<p>Manage patient healthcare records securely.</p>
+
+<div class="dashboard-actions">
+
+<a href="/add_patient" class="btn-primary">Add Patient Record</a>
+
+<a href="/patients" class="btn-secondary">View All Patients</a>
+
+</div>
+
+</div>
+
+<div class="clinician-right">
+
+<img src="/static/img/clinician_dashboard.png">
+
+</div>
+
+</section>
+
+{% endblock %}

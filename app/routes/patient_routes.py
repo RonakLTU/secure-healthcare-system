@@ -1,23 +1,28 @@
-from flask import request, render_template, redirect, session
+import sqlite3
+from flask import request, render_template, redirect
+from flask_login import current_user
+
 from app.models.patient_model import create_patient_record, get_all_patients
 
+DATABASE = "database/auth.db"
+
+
+# ==============================
+# ADD PATIENT RECORD
+# ==============================
 
 def add_patient():
 
-    if "role" not in session or session["role"] != "clinician":
-        return "Access denied"
+    # Only clinicians allowed
+    if current_user.role != "clinician":
+        return redirect("/")
 
     if request.method == "POST":
 
-        age = int(request.form.get("age"))
-
-        if age < 1 or age > 120:
-            return render_template("add_patient.html", error="Invalid age")
-
         patient_data = {
 
-            "patient_id": request.form.get("patient_id"),
-            "age": age,
+            "patient_email": request.form.get("patient_email"),
+            "age": request.form.get("age"),
             "sex": request.form.get("sex"),
             "blood_pressure": request.form.get("blood_pressure"),
             "cholesterol": request.form.get("cholesterol"),
@@ -31,14 +36,46 @@ def add_patient():
 
         return redirect("/patients")
 
-    return render_template("add_patient.html")
+    # GET request → load patient list for dropdown
 
+    with sqlite3.connect(DATABASE) as conn:
+
+        cursor = conn.cursor()
+
+        cursor.execute(
+            "SELECT name,email FROM users WHERE role='patient'"
+        )
+
+        patients = cursor.fetchall()
+
+    patient_list = []
+
+    for p in patients:
+
+        patient_list.append({
+            "name": p[0],
+            "email": p[1]
+        })
+
+    return render_template(
+        "add_patient.html",
+        patients=patient_list
+    )
+
+
+# ==============================
+# VIEW ALL PATIENT RECORDS
+# ==============================
 
 def view_patients():
 
-    if "user_id" not in session:
-        return redirect("/login")
+    # Only clinicians allowed
+    if current_user.role != "clinician":
+        return redirect("/")
 
     patients = get_all_patients()
 
-    return render_template("patients.html", patients=patients)
+    return render_template(
+        "patients.html",
+        patients=patients
+    )

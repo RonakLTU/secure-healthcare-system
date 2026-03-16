@@ -2,36 +2,36 @@
 
 {% block content %}
 
-<h2>Register</h2>
+<div class="auth-wrapper">
 
-{% if error %}
-<p style="color:red">{{ error }}</p>
-{% endif %}
+<div class="auth-card">
 
-<form method="POST">
+<h2>Patient Registration</h2>
+
+<form id="registerForm" method="POST">
 
 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
 
-<label>Name</label>
-<input type="text" name="name" required>
+<label>Full Name</label>
+<input type="text" name="name" id="name" required>
 
 <label>Email</label>
-<input type="email" name="email" required>
+<input type="email" name="email" id="email" required>
 
 <label>Password</label>
-<input type="password" name="password" required
-pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W]).{8,}"
-title="Password must contain 8 characters, uppercase, lowercase, number and symbol">
-
-<label>Role</label>
-
-<select name="role">
-<option value="patient">Patient</option>
-<option value="clinician">Clinician</option>
-</select>
+<input type="password" name="password" id="password" required>
 
 <button type="submit">Register</button>
 
 </form>
+
+<p class="auth-link">
+Already registered?
+<a href="/login">Login</a>
+</p>
+
+</div>
+
+</div>
 
 {% endblock %}

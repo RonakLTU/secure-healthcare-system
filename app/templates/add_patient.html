@@ -2,17 +2,31 @@
 
 {% block content %}
 
-<h2>Add Patient Record</h2>
+<div class="form-container">
+
+<h2>Add Patient Medical Record</h2>
 
 <form method="POST">
 
 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
 
-<label>Patient ID</label>
-<input type="text" name="patient_id" required>
+<label>Select Patient</label>
+
+<select name="patient_email" required>
+
+{% for patient in patients %}
+
+<option value="{{ patient.email }}">
+{{ patient.name }} ({{ patient.email }})
+</option>
+
+{% endfor %}
+
+</select>
+
 
 <label>Age</label>
-<input type="number" name="age">
+<input type="number" name="age" min="1" max="120" required>
 
 <label>Sex</label>
 <select name="sex">
@@ -44,8 +58,10 @@
 <option>No</option>
 </select>
 
-<button type="submit">Save Patient</button>
+<button type="submit">Save Record</button>
 
 </form>
+
+</div>
 
 {% endblock %}

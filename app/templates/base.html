@@ -1,32 +1,79 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Secure Healthcare System</title>
-    <link rel="stylesheet" href="/static/css/style.css">
+
+<title>Secure Healthcare Portal</title>
+
+<link rel="stylesheet" href="/static/css/style.css">
+
 </head>
 
 <body>
 
-<nav>
-    <h2>Secure Healthcare System</h2>
+<!-- NAVBAR -->
 
-    <ul>
-        <li><a href="/">Dashboard</a></li>
-        <li><a href="/login">Login</a></li>
-        <li><a href="/register">Register</a></li>
-    </ul>
+<nav class="navbar">
+
+<h2 class="logo">HealthPortal</h2>
+
+<ul>
+
+<li><a href="/">Home</a></li>
+<li><a href="#">Resources</a></li>
+<li><a href="#">About</a></li>
+
+{% if current_user.is_authenticated %}
+<li><a href="/logout">Logout</a></li>
+{% else %}
+<li><a href="/login">Login</a></li>
+{% endif %}
+
+</ul>
+
 </nav>
 
-<div class="container">
+
+<!-- PAGE CONTENT -->
+
+<div class="page-container">
 
 {% block content %}
 {% endblock %}
 
 </div>
 
+
+<!-- FOOTER -->
+
 <footer>
-    <p>Secure Healthcare Record System</p>
+
+<div class="footer-grid">
+
+<div>
+<h3>Healthcare Portal</h3>
+<p>Secure healthcare management platform.</p>
+</div>
+
+<div>
+<h3>Support</h3>
+<p>24/7 Healthcare Support</p>
+<p>Technical Assistance</p>
+</div>
+
+<div>
+<h3>Contact Us</h3>
+<p>Email: support@healthportal.com</p>
+<p>Phone: +44 000 000 000</p>
+</div>
+
+</div>
+
+<p class="copyright">© Secure Healthcare System</p>
+
 </footer>
+
+
+<script src="/static/js/main.js"></script>
 
 </body>
 </html>

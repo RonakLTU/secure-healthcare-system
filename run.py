@@ -1,10 +1,12 @@
 from flask import Flask, render_template
 from flask_login import login_required, current_user
+
 from app.models.user_model import create_user_table, create_default_admin
 from app.routes.auth_routes import register_user, login_user, logout_user
 from app.routes.patient_routes import add_patient, view_patients
 from app.security.csrf_protection import csrf
 from app.security.login_manager import login_manager
+from app.models.patient_model import patients_collection
 
 app = Flask(__name__,
             template_folder='app/templates',
@@ -19,11 +21,14 @@ csrf.init_app(app)
 login_manager.init_app(app)
 
 
-@app.route('/')
-@login_required
-def home():
-    return render_template('dashboard.html', role=current_user.role)
+# LANDING PAGE
 
+@app.route('/')
+def home():
+    return render_template('landing.html')
+
+
+# AUTH ROUTES
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
@@ -41,6 +46,8 @@ def register():
     return register_user()
 
 
+# PATIENT MANAGEMENT (Clinician)
+
 @app.route('/add_patient', methods=['GET', 'POST'])
 @login_required
 def add_patient_page():
@@ -51,6 +58,39 @@ def add_patient_page():
 @login_required
 def patients_page():
     return view_patients()
+
+
+# PATIENT DASHBOARD
+
+@app.route('/patient_dashboard')
+@login_required
+def patient_dashboard():
+    return render_template('patient/patient_dashboard.html')
+
+
+# PATIENT RECORD VIEW
+
+@app.route('/my_record')
+@login_required
+def my_record():
+
+    record = patients_collection.find_one({
+        "patient_email": current_user.email
+    })
+
+    return render_template(
+        "patient/my_record.html",
+        record=record
+    )
+
+@app.route('/clinician_dashboard')
+@login_required
+def clinician_dashboard():
+
+    if current_user.role != "clinician":
+        return redirect("/")
+
+    return render_template("clinician/clinician_dashboard.html")
 
 
 if __name__ == '__main__':
