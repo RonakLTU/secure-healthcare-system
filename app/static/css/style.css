@@ -339,3 +339,34 @@ padding:10px;
 border-bottom:1px solid #ddd;
 text-align:left;
 }
+
+/* ADMIN DASHBOARD */
+
+.admin-dashboard{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:60px 80px;
+background:#eaf3f7;
+}
+
+.admin-left{
+max-width:500px;
+}
+
+.admin-left h1{
+font-size:40px;
+color:#2c3e50;
+margin-bottom:20px;
+}
+
+.admin-left p{
+font-size:18px;
+margin-bottom:25px;
+}
+
+.admin-right img{
+max-width:500px;
+width:100%;
+height:auto;
+}

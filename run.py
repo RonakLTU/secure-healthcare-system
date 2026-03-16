@@ -92,6 +92,15 @@ def clinician_dashboard():
 
     return render_template("clinician/clinician_dashboard.html")
 
+@app.route('/admin_dashboard')
+@login_required
+def admin_dashboard():
+
+    if current_user.role != "admin":
+        return redirect("/")
+
+    return render_template("admin/admin_dashboard.html")
+
 
 if __name__ == '__main__':
     create_user_table()

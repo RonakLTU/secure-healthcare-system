@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<section class="admin-dashboard">
+
+<div class="admin-left">
+
+<h1>Admin Dashboard</h1>
+
+<p>
+Manage system users including clinicians and patients. 
+Administrators can create clinician accounts and manage system access.
+</p>
+
+<div class="dashboard-actions">
+
+<a href="/create_clinician" class="btn-primary">
+Create Clinician
+</a>
+
+<a href="/manage_users" class="btn-secondary">
+Manage Users
+</a>
+
+</div>
+
+</div>
+
+<div class="admin-right">
+
+<img src="/static/img/admin_dashboard.png" alt="Admin Dashboard">
+
+</div>
+
+</section>
+
+{% endblock %}
