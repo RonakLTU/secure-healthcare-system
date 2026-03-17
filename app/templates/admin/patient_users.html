@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="users-container">
+
+<h2>Patient Users</h2>
+
+<table class="users-table">
+
+<tr>
+<th>ID</th>
+<th>Name</th>
+<th>Email</th>
+<th>Action</th>
+</tr>
+
+{% for user in users %}
+
+<tr>
+<td>{{ loop.index }}</td>
+<td>{{ user.name }}</td>
+<td>{{ user.email }}</td>
+
+<td>
+<a href="#" onclick="confirmDelete({{ user.id }})" class="delete-btn">
+Delete
+</a>
+</td>
+
+</tr>
+
+{% endfor %}
+
+</table>
+
+</div>
+
+{% endblock %}

@@ -4,6 +4,10 @@ from app.security.password_utils import hash_password
 DATABASE = "database/auth.db"
 
 
+# =========================
+# CREATE USERS TABLE
+# =========================
+
 def create_user_table():
 
     with sqlite3.connect(DATABASE) as conn:
@@ -11,8 +15,9 @@ def create_user_table():
         cursor = conn.cursor()
 
         cursor.execute("""
-        CREATE TABLE IF NOT EXISTS users(
+        CREATE TABLE IF NOT EXISTS users (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
+            clinician_id INTEGER UNIQUE,
             name TEXT NOT NULL,
             email TEXT UNIQUE NOT NULL,
             password TEXT NOT NULL,
@@ -22,6 +27,9 @@ def create_user_table():
 
         conn.commit()
 
+# =========================
+# CREATE DEFAULT ADMIN
+# =========================
 
 def create_default_admin():
 
@@ -32,14 +40,39 @@ def create_default_admin():
 
         cursor = conn.cursor()
 
-        cursor.execute("SELECT * FROM users WHERE email=?", (admin_email,))
-        user = cursor.fetchone()
+        cursor.execute(
+            "SELECT * FROM users WHERE email=?",
+            (admin_email,)
+        )
 
-        if not user:
+        admin = cursor.fetchone()
+
+        if not admin:
 
             cursor.execute(
-                "INSERT INTO users (name,email,password,role) VALUES (?,?,?,?)",
+                """
+                INSERT INTO users (name,email,password,role)
+                VALUES (?,?,?,?)
+                """,
                 ("System Admin", admin_email, admin_password, "admin")
             )
 
             conn.commit()
+
+
+# =========================
+# GET USER BY EMAIL
+# =========================
+
+def get_user_by_email(email):
+
+    with sqlite3.connect(DATABASE) as conn:
+
+        cursor = conn.cursor()
+
+        cursor.execute(
+            "SELECT id,name,email,password,role FROM users WHERE email=?",
+            (email,)
+        )
+
+        return cursor.fetchone()

@@ -370,3 +370,138 @@ max-width:500px;
 width:100%;
 height:auto;
 }
+
+/* USERS TABLE */
+
+.users-container{
+width:800px;
+margin:60px auto;
+background:white;
+padding:30px;
+border-radius:8px;
+box-shadow:0 4px 15px rgba(0,0,0,0.1);
+}
+
+.users-table{
+width:100%;
+border-collapse:collapse;
+}
+
+.users-table th,
+.users-table td{
+padding:10px;
+border-bottom:1px solid #ddd;
+text-align:left;
+}
+
+.delete-btn{
+color:white;
+background:#e74c3c;
+padding:5px 10px;
+border-radius:4px;
+text-decoration:none;
+}
+
+
+.admin-dashboard{
+display:flex;
+justify-content:center;
+align-items:center;
+gap:40px;              
+padding:40px 80px;     
+}
+
+.admin-left{
+width:45%;
+}
+
+.admin-btn{
+display:block;
+margin:15px 0;
+padding:12px;
+background:#3498db;
+color:white;
+text-decoration:none;
+border-radius:6px;
+width:200px;
+text-align:center;
+}
+
+.admin-right img{
+width:400px;
+}
+
+
+/* CREATE CLINICIAN FORM */
+
+.form-wrapper{
+display:flex;
+justify-content:center;
+align-items:center;
+min-height:70vh;
+}
+
+.form-box{
+background:white;
+padding:30px;
+width:400px;
+border-radius:10px;
+box-shadow:0 4px 15px rgba(0,0,0,0.1);
+}
+
+.form-box h2{
+text-align:center;
+margin-bottom:20px;
+}
+
+.form-box label{
+display:block;
+margin-top:10px;
+font-weight:500;
+}
+
+.form-box input{
+width:100%;
+padding:10px;
+margin-top:5px;
+border:1px solid #ccc;
+border-radius:5px;
+}
+
+.form-box button{
+width:100%;
+margin-top:20px;
+padding:12px;
+background:#3498db;
+color:white;
+border:none;
+border-radius:6px;
+font-size:16px;
+cursor:pointer;
+}
+
+.form-box button:hover{
+background:#2980b9;
+}
+
+.success-msg{
+color:green;
+text-align:center;
+margin-bottom:10px;
+}
+
+.error-msg{
+color:red;
+text-align:center;
+margin-bottom:10px;
+}
+
+.success-banner{
+background:#2ecc71;
+color:white;
+padding:12px;
+border-radius:6px;
+margin:15px 0;
+width:300px;
+text-align:center;
+}

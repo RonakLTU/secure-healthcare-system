@@ -85,11 +85,7 @@ def login_user():
             cursor = conn.cursor()
 
             cursor.execute(
-                """
-                SELECT id,name,email,password,role
-                FROM users
-                WHERE email=?
-                """,
+                "SELECT id,name,email,password,role FROM users WHERE email=?",
                 (email,)
             )
 
@@ -102,24 +98,17 @@ def login_user():
             if check_password(password, hashed_password):
 
                 user_obj = User(user_id, name, email, role)
-
                 flask_login_user(user_obj)
 
-                # ROLE BASED REDIRECT
-
-                if role == "patient":
-                    return redirect("/patient_dashboard")
-
+                # ROLE REDIRECT
+                if role == "admin":
+                    return redirect("/admin_dashboard")
                 elif role == "clinician":
                     return redirect("/clinician_dashboard")
+                else:
+                    return redirect("/patient_dashboard")
 
-                elif role == "admin":
-                    return redirect("/admin_dashboard")
-
-        return render_template(
-            "login.html",
-            error="Invalid email or password"
-        )
+        return render_template("login.html", error="Invalid email or password")
 
     return render_template("login.html")
 
