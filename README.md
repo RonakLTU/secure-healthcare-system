@@ -1,4 +1,4 @@
-**Secure Healthcare Management System**
+##Secure Healthcare Management System
 
 The system simulates a real-world healthcare environment where:
 •	Patients can register, login, view medical records, and book appointments
