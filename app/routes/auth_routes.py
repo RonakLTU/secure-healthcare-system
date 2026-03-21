@@ -7,6 +7,7 @@ from flask_login import login_user as flask_login_user
 from flask_login import logout_user as flask_logout
 
 from app.models.auth_user import User
+from app.security.logger import log_event, log_error
 
 DATABASE = "database/auth.db"
 
@@ -14,7 +15,6 @@ DATABASE = "database/auth.db"
 # ==============================
 # REGISTER PATIENT
 # ==============================
-
 def register_user():
 
     if request.method == "POST":
@@ -28,41 +28,29 @@ def register_user():
         email_pattern = r'^[\w\.-]+@[\w\.-]+\.\w+$'
 
         if not re.match(email_pattern, email):
-            return render_template(
-                "register.html",
-                error="Invalid email format"
-            )
+            return render_template("register.html", error="Invalid email format")
 
         if len(password) < 8:
-            return render_template(
-                "register.html",
-                error="Password must be at least 8 characters"
-            )
+            return render_template("register.html", error="Password must be at least 8 characters")
 
         hashed_password = hash_password(password)
 
         try:
-
             with sqlite3.connect(DATABASE) as conn:
-
                 cursor = conn.cursor()
 
-                cursor.execute(
-                    """
+                cursor.execute("""
                     INSERT INTO users (name,email,password,role)
                     VALUES (?,?,?,?)
-                    """,
-                    (name, email, hashed_password, role)
-                )
+                """, (name, email, hashed_password, role))
 
                 conn.commit()
 
-        except sqlite3.IntegrityError:
+                log_event(f"New user registered: {email}")
 
-            return render_template(
-                "register.html",
-                error="Email already exists"
-            )
+        except sqlite3.IntegrityError:
+            log_error(f"Duplicate registration attempt: {email}")
+            return render_template("register.html", error="Email already exists")
 
         return redirect("/login")
 
@@ -72,7 +60,6 @@ def register_user():
 # ==============================
 # LOGIN USER
 # ==============================
-
 def login_user():
 
     if request.method == "POST":
@@ -81,7 +68,6 @@ def login_user():
         password = request.form.get("password")
 
         with sqlite3.connect(DATABASE) as conn:
-
             cursor = conn.cursor()
 
             cursor.execute(
@@ -92,7 +78,6 @@ def login_user():
             user = cursor.fetchone()
 
         if user:
-
             user_id, name, email, hashed_password, role = user
 
             if check_password(password, hashed_password):
@@ -100,13 +85,17 @@ def login_user():
                 user_obj = User(user_id, name, email, role)
                 flask_login_user(user_obj)
 
-                # ROLE REDIRECT
+                log_event(f"User logged in: {email}")
+
                 if role == "admin":
                     return redirect("/admin_dashboard")
                 elif role == "clinician":
                     return redirect("/clinician_dashboard")
                 else:
                     return redirect("/patient_dashboard")
+
+        # ❌ failed login
+        log_error(f"Failed login attempt: {email}")
 
         return render_template("login.html", error="Invalid email or password")
 
@@ -116,8 +105,9 @@ def login_user():
 # ==============================
 # LOGOUT
 # ==============================
-
 def logout_user():
+
+    log_event("User logged out")
 
     flask_logout()
 

@@ -4,15 +4,31 @@
 
 <section class="patient-dashboard">
 
-<div class="patient-left">
+<div class="dashboard-container">
 
-<h1>Welcome to Your Patient Portal</h1>
+<h2>Welcome to Patient Dashboard</h2>
 
-<p>
-Here you can securely view your medical records and healthcare data.
-</p>
+{% if request.args.get('success') %}
+<div class="success-message" id="successMsg">
+    {{ request.args.get('success') }}
+</div>
 
-<a href="/my_record" class="btn-primary">View My Medical Record</a>
+<script>
+setTimeout(()=>{
+document.getElementById("successMsg").style.display="none";
+},3000);
+</script>
+{% endif %}
+
+<div class="dashboard-actions">
+
+<a href="/my_record" class="dash-btn">View My Medical Record</a>
+
+<a href="/book_appointment" class="dash-btn">Book Appointment</a>
+
+<a href="/my_appointments" class="dash-btn">View My Appointments</a>
+
+</div>
 
 </div>
 

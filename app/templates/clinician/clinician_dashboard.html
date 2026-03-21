@@ -2,30 +2,39 @@
 
 {% block content %}
 
-<section class="clinician-dashboard">
+<div class="clinician-dashboard">
 
-<div class="clinician-left">
 
-<h1>Clinician Dashboard</h1>
 
-<p>Manage patient healthcare records securely.</p>
+    <div class="clinician-left">
+        <h2>Clinician Panel</h2>
 
-<div class="dashboard-actions">
+        {% if request.args.get('success') %}
+        <div class="success-message" id="successMsg">
+            {{ request.args.get('success') }}
+        </div>
 
-<a href="/add_patient" class="btn-primary">Add Patient Record</a>
+        <script>
+        setTimeout(function(){
+            const msg = document.getElementById("successMsg");
+            if(msg){
+                msg.style.display = "none";
+            }
+        }, 2000); // 2 seconds
+        </script>
+        {% endif %}
 
-<a href="/patients" class="btn-secondary">View All Patients</a>
+        <p>Manage patient records and appointments</p>
+
+        <a href="/add_patient" class="clinician-btn">Add Patient</a>
+        <a href="/patients" class="clinician-btn">View All Patients</a>
+        <a href="/appointments" class="clinician-btn">Appointments</a>
+    </div>
+
+    <div class="clinician-right">
+        <img src="{{ url_for('static', filename='img/clinician_dashboard.png') }}"> 
+    </div>
 
 </div>
-
-</div>
-
-<div class="clinician-right">
-
-<img src="/static/img/clinician_dashboard.png">
-
-</div>
-
-</section>
 
 {% endblock %}

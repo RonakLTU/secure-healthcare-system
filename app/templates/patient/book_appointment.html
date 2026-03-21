@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="form-wrapper">
+
+<div class="form-box">
+
+<h2>Book Appointment</h2>
+
+{% if error %}
+<p style="color:red;">{{ error }}</p>
+{% endif %}
+
+<form method="POST">
+
+<input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+<label>Select Date</label>
+<input type="date" name="date" id="dateInput" required>
+
+<label>Start Time</label>
+<input type="time" name="start_time" required>
+
+<label>End Time</label>
+<input type="time" name="end_time" required>
+
+<button type="submit">Book Appointment</button>
+
+</form>
+
+</div>
+</div>
+
+<script>
+document.querySelector("form").addEventListener("submit", function(e){
+
+    const start = document.querySelector("input[name='start_time']").value;
+    const end = document.querySelector("input[name='end_time']").value;
+
+    if(start >= end){
+        alert("End time must be greater than start time");
+        e.preventDefault();
+    }
+
+});
+</script>
+
+<script>
+const today = new Date().toISOString().split("T")[0];
+document.getElementById("dateInput").setAttribute("min", today);
+</script>
+
+{% endblock %}

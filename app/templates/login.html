@@ -8,6 +8,10 @@
 
 <h2>Login Portal</h2>
 
+{% if error %}
+<p class="error-msg">{{ error }}</p>
+{% endif %}
+
 <form id="loginForm" method="POST">
 
 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">

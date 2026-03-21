@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<div class="form-wrapper">
+
+<div class="form-box" style="width:800px;">
+
+<h2>Patient Appointments</h2>
+
+<h3>Upcoming Appointments</h3>
+
+<table class="patient-table">
+
+<tr>
+<th>Patient ID</th>
+<th>Name</th>
+<th>Date</th>
+<th>Time</th>
+<th>Status</th>
+</tr>
+
+{% for a in upcoming %}
+<tr>
+<td>{{ a.patient_id }}</td>
+<td>{{ a.name }}</td>
+<td>{{ a.date }}</td>
+<td>{{ a.start_time }} - {{ a.end_time }}</td>
+<td style="color:green;">{{ a.status }}</td>
+</tr>
+{% endfor %}
+
+</table>
+
+<br>
+
+<h3>Appointment History</h3>
+
+<table class="patient-table">
+
+<tr>
+<th>Patient ID</th>
+<th>Name</th>
+<th>Date</th>
+<th>Time</th>
+<th>Status</th>
+</tr>
+
+{% for a in history %}
+<tr>
+<td>{{ a.patient_id }}</td>
+<td>{{ a.name }}</td>
+<td>{{ a.date }}</td>
+<td>{{ a.start_time }} - {{ a.end_time }}</td>
+<td style="color:gray;">{{ a.status }}</td>
+</tr>
+{% endfor %}
+
+</table>
+
+</div>
+</div>
+
+{% endblock %}

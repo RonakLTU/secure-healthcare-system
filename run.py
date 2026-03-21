@@ -9,6 +9,8 @@ from app.security.csrf_protection import csrf
 from app.security.login_manager import login_manager
 from app.models.patient_model import patients_collection
 from app.security.password_utils import hash_password
+from app.routes.patient_routes import edit_patient, delete_patient
+from app.security.logger import log_event
 
 DATABASE = "database/auth.db"
 
@@ -82,6 +84,11 @@ def my_record():
 # CLINICIAN ROUTES
 # ======================
 
+
+
+from app.routes.patient_routes import add_patient, view_patients, edit_patient, delete_patient
+
+
 @app.route('/clinician_dashboard')
 @login_required
 def clinician_dashboard():
@@ -103,6 +110,17 @@ def add_patient_page():
 def patients_page():
     return view_patients()
 
+
+@app.route('/edit_patient/<patient_id>', methods=['GET','POST'])
+@login_required
+def edit_patient_page(patient_id):
+    return edit_patient(patient_id)
+
+
+@app.route('/delete_patient/<patient_id>')
+@login_required
+def delete_patient_page(patient_id):
+    return delete_patient(patient_id)
 
 # ======================
 # ADMIN DASHBOARD
@@ -282,6 +300,139 @@ def delete_user(user_id):
         conn.commit()
 
     return redirect("/manage_users")
+
+#Book Appointment
+
+@app.route('/book_appointment', methods=['GET','POST'])
+@login_required
+def book_appointment():
+
+    if current_user.role != "patient":
+        return redirect("/")
+
+    if request.method == "POST":
+
+        date = request.form.get("date")
+        start_time = request.form.get("start_time")
+        end_time = request.form.get("end_time")
+
+        # simple validation
+        if not date or not start_time or not end_time:
+            return render_template("patient/book_appointment.html", error="All fields required")
+    
+        from app.models.patient_model import patients_collection
+        from datetime import datetime
+
+        patient = patients_collection.find_one({
+            "patient_email": current_user.email
+        })
+
+        appointment = {
+            "patient_email": current_user.email,
+            "patient_id": patient.get("patient_id") if patient else "N/A",
+            "name": patient.get("name") if patient else "N/A",
+            "date": date,
+            "start_time": start_time,
+            "end_time": end_time,
+            "created_at": datetime.now()
+        }
+
+        patients_collection.insert_one({"appointment": appointment})
+
+        log_event(f"Appointment booked by {current_user.email} on {date}")
+
+        return redirect("/patient_dashboard?success=Appointment booked successfully")
+
+    return render_template("patient/book_appointment.html")
+
+
+
+# view appointment
+
+@app.route('/my_appointments')
+@login_required
+def my_appointments():
+
+    from app.models.patient_model import patients_collection
+    from datetime import datetime
+
+    records = list(patients_collection.find({
+        "appointment.patient_email": current_user.email
+    }))
+
+    upcoming = []
+    history = []
+
+    today = datetime.now().date()
+
+    for r in records:
+        appt = r.get("appointment")
+
+        if appt:
+            appt_date = datetime.strptime(appt["date"], "%Y-%m-%d").date()
+
+            if appt_date >= today:
+                appt["status"] = "Upcoming"
+                upcoming.append(appt)
+            else:
+                appt["status"] = "Completed"
+                history.append(appt)
+
+    return render_template(
+        "patient/my_appointments.html",
+        upcoming=upcoming,
+        history=history
+    )
+
+#Clincian View appointment
+
+@app.route('/appointments')
+@login_required
+def clinician_appointments():
+
+    if current_user.role != "clinician":
+        return redirect("/")
+
+    from app.models.patient_model import patients_collection
+    from datetime import datetime
+
+    records = list(patients_collection.find({
+        "appointment": {"$exists": True}
+    }))
+
+    upcoming = []
+    history = []
+
+    today = datetime.now().date()
+
+    for r in records:
+
+        appt = r.get("appointment")
+
+        if appt:
+
+            appt_date = datetime.strptime(appt["date"], "%Y-%m-%d").date()
+
+            data = {
+                "patient_id": appt.get("patient_id"),
+                "name": appt.get("name"),
+                "date": appt["date"],
+                "start_time": appt["start_time"],
+                "end_time": appt["end_time"]
+            }
+
+            if appt_date >= today:
+                data["status"] = "Upcoming"
+                upcoming.append(data)
+            else:
+                data["status"] = "Completed"
+                history.append(data)
+
+    return render_template(
+        "clinician/appointments.html",
+        upcoming=upcoming,
+        history=history
+    )
 
 
 # ======================

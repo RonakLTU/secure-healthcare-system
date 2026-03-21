@@ -2,66 +2,120 @@
 
 {% block content %}
 
-<div class="form-container">
+<div class="form-wrapper">
 
-<h2>Add Patient Medical Record</h2>
+<div class="form-box">
+
+<h2>{{ "Edit Patient Record" if patient else "Add Patient Record" }}</h2>
 
 <form method="POST">
 
 <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
 
-<label>Select Patient</label>
-
-<select name="patient_email" required>
-
-{% for patient in patients %}
-
-<option value="{{ patient.email }}">
-{{ patient.name }} ({{ patient.email }})
+<!-- SELECT PATIENT (ONLY FOR ADD MODE) -->
+{% if not patient %}
+<label>Select Patient (Email)</label>
+<select name="patient_email" id="patientSelect" required onchange="fillPatientName()">
+<option value="">Select Patient</option>
+{% for p in patients %}
+<option value="{{ p.email }}" data-name="{{ p.name }}">
+    {{ p.email }}
 </option>
-
 {% endfor %}
-
 </select>
+{% else %}
+<input type="hidden" name="patient_email" value="{{ patient.patient_email }}">
+{% endif %}
 
+<label>Patient ID</label>
+<input type="number" name="patient_id"
+value="{{ patient.patient_id if patient else '' }}" required min="1">
+
+<label>Name</label>
+<input type="text" name="name" id="patientName"
+value="{{ patient.name if patient else '' }}" required>
 
 <label>Age</label>
-<input type="number" name="age" min="1" max="120" required>
+<input type="number" name="age"
+value="{{ patient.age if patient else '' }}"
+min="0" max="120" required>
 
 <label>Sex</label>
 <select name="sex">
-<option>Male</option>
-<option>Female</option>
+<option value="Male" {% if patient and patient.sex=='Male' %}selected{% endif %}>Male</option>
+<option value="Female" {% if patient and patient.sex=='Female' %}selected{% endif %}>Female</option>
 </select>
 
 <label>Blood Pressure</label>
-<input type="number" name="blood_pressure">
+<input type="number" name="blood_pressure"
+value="{{ patient.blood_pressure if patient else '' }}">
 
 <label>Cholesterol</label>
-<input type="number" name="cholesterol">
+<input type="number" name="cholesterol"
+value="{{ patient.cholesterol if patient else '' }}">
 
 <label>Fasting Blood Sugar</label>
 <select name="fasting_blood_sugar">
-<option>Yes</option>
-<option>No</option>
+<option value="Yes" {% if patient and patient.fasting_blood_sugar=='Yes' %}selected{% endif %}>Yes</option>
+<option value="No" {% if patient and patient.fasting_blood_sugar=='No' %}selected{% endif %}>No</option>
 </select>
 
 <label>Resting ECG</label>
 <select name="resting_ecg">
-<option>Normal</option>
-<option>Abnormal</option>
+<option value="Normal" {% if patient and patient.resting_ecg=='Normal' %}selected{% endif %}>Normal</option>
+<option value="Abnormal" {% if patient and patient.resting_ecg=='Abnormal' %}selected{% endif %}>Abnormal</option>
 </select>
 
-<label>Exercise Angina</label>
+<label>Exercise-Induced Angina</label>
 <select name="exercise_angina">
-<option>Yes</option>
-<option>No</option>
+<option value="Yes" {% if patient and patient.exercise_angina=='Yes' %}selected{% endif %}>Yes</option>
+<option value="No" {% if patient and patient.exercise_angina=='No' %}selected{% endif %}>No</option>
 </select>
 
-<button type="submit">Save Record</button>
+<button type="submit" class="btn-submit">
+{{ "Update Record" if patient else "Save Record" }}
+</button>
 
 </form>
 
 </div>
+</div>
+
+<!-- AUTO FILL NAME -->
+<script>
+function fillPatientName(){
+    var select = document.getElementById("patientSelect");
+    var nameInput = document.getElementById("patientName");
+
+    if(select){
+        var selectedOption = select.options[select.selectedIndex];
+        if(selectedOption){
+            nameInput.value = selectedOption.getAttribute("data-name") || "";
+        }
+    }
+}
+</script>
+
+<!-- VALIDATION -->
+<script>
+document.querySelector("form").addEventListener("submit", function(e){
+
+    const age = document.querySelector("input[name='age']").value;
+    const patientId = document.querySelector("input[name='patient_id']").value;
+
+    if(age < 0 || age > 120){
+        alert("Age must be between 0 and 120");
+        e.preventDefault();
+        return;
+    }
+
+    if(!/^\d+$/.test(patientId)){
+        alert("Patient ID must be numeric");
+        e.preventDefault();
+        return;
+    }
+
+});
+</script>
 
 {% endblock %}
